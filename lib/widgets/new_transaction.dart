@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addTransaction;
-  NewTransaction( this.addTransaction);
+  NewTransaction(this.addTransaction);
 
   @override
   _NewTransactionState createState() => _NewTransactionState();
@@ -44,6 +44,7 @@ class _NewTransactionState extends State<NewTransaction> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     // String date = DateFormat.yMEd().format(_selectedDate);
+    MediaQueryData _mediaQuery = MediaQuery.of(context);
 
     return Container(
       color: Color(0xff757575),
@@ -57,21 +58,19 @@ class _NewTransactionState extends State<NewTransaction> {
             ),
           ),
           child: SingleChildScrollView(
-            padding: MediaQuery.of(context).viewInsets,
+            padding: _mediaQuery.viewInsets,
             child: FocusScope(
               node: _focusScopeNode,
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  SizedBox(
-                      height: MediaQuery.of(context).size.height * 1 / 100),
+                  SizedBox(height: _mediaQuery.size.height * 1 / 100),
                   Text(
                     'Add New Transaction',
                     style: theme.textTheme.headline5
                         .copyWith(color: Colors.purple[700]),
                   ),
-                  SizedBox(
-                      height: MediaQuery.of(context).size.height * 1 / 100),
+                  SizedBox(height: _mediaQuery.size.height * 1 / 100),
                   SizedBox(),
                   TextField(
                     autofocus: true,
@@ -88,8 +87,7 @@ class _NewTransactionState extends State<NewTransaction> {
                         submitData(), // Here, I changed it from a simple fn reference (submitData) to a newTransaction (submitData()), so that, when we tap submit, it actually runs
                     onChanged: (value) => _titleController.text = value,
                   ),
-                  SizedBox(
-                      height: MediaQuery.of(context).size.height * 1 / 100),
+                  SizedBox(height: _mediaQuery.size.height * 1 / 100),
                   TextField(
                     decoration: InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -98,13 +96,16 @@ class _NewTransactionState extends State<NewTransaction> {
                         labelText: 'Amount'),
                     onSubmitted: (_) => submitData(),
                     textInputAction: TextInputAction.done,
-                    onEditingComplete:  _selectedDate==null?_presentDatePicker:()=>_focusScopeNode.nextFocus(),
+                    onEditingComplete: _selectedDate == null
+                        ? _presentDatePicker
+                        : () => _focusScopeNode.nextFocus(),
                     // _focusScopeNode.nextFocus(),
                     onChanged: (value) => _amountController.text = value,
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
                   ),
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(_selectedDate == null
                           ? 'No Date Selected'
