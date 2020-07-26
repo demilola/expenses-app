@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:expenses_app/widgets/chart.dart';
 import 'package:expenses_app/widgets/new_transaction.dart';
 import 'package:expenses_app/widgets/transactions_list.dart';
@@ -172,12 +174,14 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(child: TransactionsList(_transactions, _deleteTransaction))
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        foregroundColor:
-            Theme.of(context).floatingActionButtonTheme.foregroundColor,
-        onPressed: () => _openModalSheet(context),
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: Platform.isIOS
+          ? Container()
+          : FloatingActionButton(
+              foregroundColor:
+                  Theme.of(context).floatingActionButtonTheme.foregroundColor,
+              onPressed: () => _openModalSheet(context),
+              child: Icon(Icons.add),
+            ),
     );
   }
 }
