@@ -37,26 +37,18 @@ class Chart extends StatelessWidget {
 //Remember to comment explanation of this:
   double get totalAmountSpent => groupedTransactionsList.fold(
       0.00, (previousValue, element) => element['amount'] += previousValue);
-  // {
-  //   double number=0.00;
-  //   for (Transaction transaction in recentTransactions) {
-  //     number += transaction.amount;
-  //   }
-  //   return number;
-  // }
 
   @override
   Widget build(BuildContext context) {
-    // print(groupedTransactionsList);
     return Card(
       elevation: 5,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: recentTransactions.isNotEmpty
-              // ? recentTransactions.length == 1
-                  ? groupedTransactionsList
+          children: 
+          recentTransactions.isNotEmpty
+                  ? 
+                  groupedTransactionsList
                       .map((recentTransaction) =>
-                          // Column(children: [Text(recentTransaction['day'][0]), Container(),Text(recentTransaction['amount'].toStringAsFixed(2))],)
                           Flexible(
                             fit: FlexFit.tight,
                             child: ChartBar(
@@ -70,19 +62,6 @@ class Chart extends StatelessWidget {
                           ))
                       .toList()
                   : []
-              // : [
-              //     Flexible(
-              //       fit: FlexFit.tight,
-              //       child: ChartBar(
-              //           label: recentTransactions[0].title,
-              //           totalAmountSpent: recentTransactions[0].amount,
-              //           spendingPercentOfTotal: 1
-              //           // totalAmountSpent == 0.00
-              //           //     ? 0.00
-              //           //     : recentTransactions[0].amount /
-              //           //         totalAmountSpent,
-              //           ),
-              //     )]
                 ),
     );
   }

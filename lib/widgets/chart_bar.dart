@@ -24,7 +24,6 @@ class ChartBar extends StatelessWidget {
                       border: Border.all(
                         color: Colors.grey,
                       )),
-                  // color: Color.fromRGBO(220, 220, 200, 1),
                 ),
                 FractionallySizedBox(
                     heightFactor: spendingPercentOfTotal,

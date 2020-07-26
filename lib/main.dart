@@ -16,7 +16,6 @@ class MyApp extends StatelessWidget {
       title: 'Flutter App',
       theme: ThemeData(
         primarySwatch: Colors.amber,
-        // accentColor: Colors.amberAccent,
         textTheme: GoogleFonts.openSansTextTheme(),
         accentTextTheme: GoogleFonts.quicksandTextTheme(),
         floatingActionButtonTheme: FloatingActionButtonThemeData(),
@@ -25,6 +24,7 @@ class MyApp extends StatelessWidget {
           elevation: 0.0,
         ),
         typography: Typography.material2018(),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: '💰 Expenses App 💰'),
     );
@@ -113,11 +113,10 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: <Widget>[
           Container(
-              width: double.infinity,
+              width: MediaQuery.of(context).size.width,
               child: Chart(
                 recentTransactions: recentTransactions,
               )),
-          // UserTransactions(),
           Expanded(child: TransactionsList(_transactions, _deleteTransaction))
         ],
       ),
@@ -128,6 +127,5 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ),
     );
-    // body: SafeArea(child: Text('Hello World')));
   }
 }

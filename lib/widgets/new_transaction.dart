@@ -29,8 +29,6 @@ class _NewTransactionState extends State<NewTransaction> {
         content: Text('No Info Passed'),
       ));
     }
-    // _titleController.clear();
-    // _amountController.clear();
   }
 
   void _presentDatePicker() => showDatePicker(
