@@ -105,15 +105,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+    var appBar = AppBar(
+            title: Text(widget.title),
+          );
+        return Scaffold(
+          resizeToAvoidBottomInset: true,
+          appBar: appBar,
       body: Column(
         children: <Widget>[
           Container(
               width: MediaQuery.of(context).size.width,
+              //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
+              height: (MediaQuery.of(context).size.height-appBar.preferredSize.height-MediaQuery.of(context).padding.top)*.25,
               child: Chart(
                 recentTransactions: recentTransactions,
               )),

@@ -11,8 +11,11 @@ class ChartBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height:MediaQuery.of(context).size.height*0.03,child: FittedBox(child: Text('\$${totalAmountSpent.toStringAsFixed(2)}'))),
-        SizedBox(height: MediaQuery.of(context).size.height*0.0075),
+        SizedBox(
+            height: MediaQuery.of(context).size.height * 0.03,
+            child: FittedBox(
+                child: Text('\$${totalAmountSpent.toStringAsFixed(2)}'))),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.0075),
         Container(
             height: 60,
             width: 10,
@@ -35,8 +38,10 @@ class ChartBar extends StatelessWidget {
                     ))
               ],
             )),
-        SizedBox(height: MediaQuery.of(context).size.height*0.0075),
-        SizedBox(height:MediaQuery.of(context).size.height*0.03,child:Text(label.toUpperCase()))
+        SizedBox(height: MediaQuery.of(context).size.height * 0.0075),
+        SizedBox(
+            height: MediaQuery.of(context).size.height * 0.03,
+            child: Text(label.toUpperCase()))
       ],
     );
   }
