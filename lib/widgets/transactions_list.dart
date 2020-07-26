@@ -15,15 +15,19 @@ class TransactionsList extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return transactions.isEmpty
-        ? Column(
-            children: [
-              Text('No Transactions Yet', style: theme.textTheme.headline5),
-              SizedBox(
-                  height: MediaQuery.of(context).size.height * 1.0 / 100.0),
-              Image.asset('assets/images/waiting.png',
-                  fit: BoxFit.cover, height: 250.0)
-            ],
-          )
+        ? LayoutBuilder(
+                 builder: (ctx,constraints)=> Column(
+              children: [
+                Text('No Transactions Yet', style: theme.textTheme.headline5),
+                SizedBox(
+                    height: constraints.maxHeight*.005),
+                Expanded(
+                                  child: Image.asset('assets/images/waiting.png',
+                      fit: BoxFit.cover, ),
+                )
+              ],
+            ),
+        )
         : ListView.builder(
             shrinkWrap: true,
             itemCount: transactions.length,
