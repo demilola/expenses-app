@@ -113,9 +113,18 @@ class _MyHomePageState extends State<MyHomePage> {
       isScrollControlled: true,
       context: context,
       builder: (_) => NewTransaction(_addTransaction));
+  bool _showChart = true;
+
+  void _toggleSwitch(bool newValue) {
+    setState(() {
+      _showChart = newValue;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    bool _isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     var appBar = AppBar(
       title: Text(widget.title),
     );
@@ -124,18 +133,40 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: appBar,
       body: Column(
         children: <Widget>[
-          Container(
-              width: MediaQuery.of(context).size.width,
-              //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
-              height: recentTransactions.isNotEmpty
-                  ? (MediaQuery.of(context).size.height -
-                          appBar.preferredSize.height -
-                          MediaQuery.of(context).padding.top) *
-                      .30
-                  : 0.00,
-              child: Chart(
-                recentTransactions: recentTransactions,
-              )),
+          if (_isLandscape)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Hide Chart'),
+                Switch.adaptive(value: _showChart, onChanged: _toggleSwitch),
+              ],
+            ),
+            if(!_isLandscape)Container(
+                  width: MediaQuery.of(context).size.width,
+                  //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
+                  height: recentTransactions.isNotEmpty
+                      ? (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          .30
+                      : 0.00,
+                  child: Chart(
+                    recentTransactions: recentTransactions,
+                  )),
+          if (_isLandscape)_showChart
+              ? Container()
+              : Container(
+                  width: MediaQuery.of(context).size.width,
+                  //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
+                  height: recentTransactions.isNotEmpty
+                      ? (MediaQuery.of(context).size.height -
+                              appBar.preferredSize.height -
+                              MediaQuery.of(context).padding.top) *
+                          .30
+                      : 0.00,
+                  child: Chart(
+                    recentTransactions: recentTransactions,
+                  )),
           Expanded(child: TransactionsList(_transactions, _deleteTransaction))
         ],
       ),
