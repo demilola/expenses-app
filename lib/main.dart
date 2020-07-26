@@ -2,11 +2,20 @@ import 'package:expenses_app/widgets/chart.dart';
 import 'package:expenses_app/widgets/new_transaction.dart';
 import 'package:expenses_app/widgets/transactions_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'models/transaction.dart';
 
 void main() => runApp(MyApp());
+
+//To restrict orientation to one setting:
+// void main() {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   SystemChrome.setPreferredOrientations(
+//       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+//   runApp(MyApp());
+// }
 
 class MyApp extends StatelessWidget {
   @override
@@ -118,10 +127,12 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(
               width: MediaQuery.of(context).size.width,
               //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
-              height: (MediaQuery.of(context).size.height -
-                      appBar.preferredSize.height -
-                      MediaQuery.of(context).padding.top) *
-                  .25,
+              height: recentTransactions.isNotEmpty
+                  ? (MediaQuery.of(context).size.height -
+                          appBar.preferredSize.height -
+                          MediaQuery.of(context).padding.top) *
+                      .30
+                  : 0.00,
               child: Chart(
                 recentTransactions: recentTransactions,
               )),
