@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:expenses_app/widgets/chart.dart';
 import 'package:expenses_app/widgets/new_transaction.dart';
 import 'package:expenses_app/widgets/transactions_list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,25 +23,36 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter App',
-      theme: ThemeData(
-        primarySwatch: Colors.amber,
-        textTheme: GoogleFonts.openSansTextTheme()
-            .apply(fontSizeFactor: MediaQuery.textScaleFactorOf(context)),
-        accentTextTheme: GoogleFonts.quicksandTextTheme()
-            .apply(fontSizeFactor: MediaQuery.textScaleFactorOf(context)),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(),
-        appBarTheme: AppBarTheme(
-          centerTitle: true,
-          elevation: 0.0,
-        ),
-        typography: Typography.material2018(),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: '💰 Expenses App 💰'),
-    );
+    return Platform.isIOS
+        ? CupertinoApp(
+            debugShowCheckedModeBanner: false,
+            theme: CupertinoThemeData(
+                primaryColor: Colors.amber,
+                primaryContrastingColor: Colors.black
+                // textTheme: GoogleFonts.openSansTextTheme()
+                //     .apply(fontSizeFactor: MediaQuery.textScaleFactorOf(context)),
+                ),
+            home: MyHomePage(title: '💰 Expenses App 💰'),
+          )
+        : MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter App',
+            theme: ThemeData(
+              primarySwatch: Colors.amber,
+              textTheme: GoogleFonts.openSansTextTheme()
+                  .apply(fontSizeFactor: MediaQuery.textScaleFactorOf(context)),
+              accentTextTheme: GoogleFonts.quicksandTextTheme()
+                  .apply(fontSizeFactor: MediaQuery.textScaleFactorOf(context)),
+              floatingActionButtonTheme: FloatingActionButtonThemeData(),
+              appBarTheme: AppBarTheme(
+                centerTitle: true,
+                elevation: 0.0,
+              ),
+              typography: Typography.material2018(),
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            home: MyHomePage(title: '💰 Expenses App 💰'),
+          );
   }
 }
 
@@ -127,65 +139,87 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final MediaQueryData _mediaQuery = MediaQuery.of(context);
     final bool _isLandscape = _mediaQuery.orientation == Orientation.landscape;
-    var appBar = AppBar(
-      title: Text(widget.title),
-    );
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: appBar,
-      body: Column(
-        children: <Widget>[
-          if (_isLandscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+    PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text(widget.title),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Hide Chart'),
-                Switch.adaptive(
-                  value: _showChart,
-                  onChanged: _toggleSwitch,
-                  activeColor: Theme.of(context).toggleableActiveColor,
-                ),
+                CupertinoButton(
+                    child: Icon(CupertinoIcons.add),
+                    onPressed: () => _openModalSheet(context)),
+                Text('Add')
               ],
             ),
-          if (!_isLandscape)
-            Container(
-                width: _mediaQuery.size.width,
-                //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
-                height: recentTransactions.isNotEmpty
-                    ? (_mediaQuery.size.height -
-                            appBar.preferredSize.height -
-                            _mediaQuery.padding.top) *
-                        .30
-                    : 0.00,
-                child: Chart(
-                  recentTransactions: recentTransactions,
-                )),
-          if (_isLandscape)
-            _showChart
+          )
+        : AppBar(
+            title: Text(widget.title),
+          );
+    final Widget appBody = SafeArea(
+        child: Column(
+      children: <Widget>[
+        if (_isLandscape)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Hide Chart', style: Theme.of(context).textTheme.headline1),
+              Switch.adaptive(
+                value: _showChart,
+                onChanged: _toggleSwitch,
+                activeColor: Theme.of(context).toggleableActiveColor,
+              ),
+            ],
+          ),
+        if (!_isLandscape)
+          Container(
+              width: _mediaQuery.size.width,
+              //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
+              height: recentTransactions.isNotEmpty
+                  ? (_mediaQuery.size.height -
+                          appBar.preferredSize.height -
+                          _mediaQuery.padding.top) *
+                      .30
+                  : 0.00,
+              child: Chart(
+                recentTransactions: recentTransactions,
+              )),
+        if (_isLandscape)
+          _showChart
+              ? Container()
+              : Container(
+                  width: _mediaQuery.size.width,
+                  //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
+                  height: recentTransactions.isNotEmpty
+                      ? (_mediaQuery.size.height -
+                              appBar.preferredSize.height -
+                              _mediaQuery.padding.top) *
+                          .30
+                      : 0.00,
+                  child: Chart(
+                    recentTransactions: recentTransactions,
+                  )),
+        Expanded(child: TransactionsList(_transactions, _deleteTransaction))
+      ],
+    ));
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: appBar,
+            resizeToAvoidBottomInset: false,
+            navigationBar: appBar,
+          )
+        : Scaffold(
+            resizeToAvoidBottomInset: true,
+            appBar: appBar,
+            body: appBody,
+            floatingActionButton: Platform.isIOS
                 ? Container()
-                : Container(
-                    width: _mediaQuery.size.width,
-                    //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
-                    height: recentTransactions.isNotEmpty
-                        ? (_mediaQuery.size.height -
-                                appBar.preferredSize.height -
-                                _mediaQuery.padding.top) *
-                            .30
-                        : 0.00,
-                    child: Chart(
-                      recentTransactions: recentTransactions,
-                    )),
-          Expanded(child: TransactionsList(_transactions, _deleteTransaction))
-        ],
-      ),
-      floatingActionButton: Platform.isIOS
-          ? Container()
-          : FloatingActionButton(
-              foregroundColor:
-                  Theme.of(context).floatingActionButtonTheme.foregroundColor,
-              onPressed: () => _openModalSheet(context),
-              child: Icon(Icons.add),
-            ),
-    );
+                : FloatingActionButton(
+                    foregroundColor: Theme.of(context)
+                        .floatingActionButtonTheme
+                        .foregroundColor,
+                    onPressed: () => _openModalSheet(context),
+                    child: Icon(Icons.add),
+                  ),
+          );
   }
 }

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -31,12 +34,14 @@ class _NewTransactionState extends State<NewTransaction> {
     }
   }
 
-  void _presentDatePicker() => showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime.now().subtract(Duration(days: 28)),
-          lastDate: DateTime.now())
-      .then((value) => _selectedDate = value);
+  void _presentDatePicker() => CupertinoDatePicker(
+        onDateTimeChanged: (value) => _selectedDate = value,
+      );
+  // context: context,
+  // initialDate: DateTime.now(),
+  // firstDate: DateTime.now().subtract(Duration(days: 28)),
+  // lastDate: DateTime.now())
+  // .then((value) => _selectedDate = value);
 
   final FocusScopeNode _focusScopeNode = FocusScopeNode();
 
@@ -110,28 +115,46 @@ class _NewTransactionState extends State<NewTransaction> {
                       Text(_selectedDate == null
                           ? 'No Date Selected'
                           : 'Picked Date: ${DateFormat.yMEd().format(_selectedDate)}'),
-                      FlatButton(
-                          onPressed: _presentDatePicker,
-                          child: Text(
-                              _selectedDate == null
-                                  ? 'Choose Date'
-                                  : 'Change Date',
-                              style: TextStyle(color: theme.primaryColor))),
+                      Platform.isIOS
+                          ? CupertinoButton(
+                              onPressed: _presentDatePicker,
+                              child: Text(
+                                  _selectedDate == null
+                                      ? 'Choose Date'
+                                      : 'Change Date',
+                                  style: TextStyle(color: theme.primaryColor)))
+                          : FlatButton(
+                              onPressed: _presentDatePicker,
+                              child: Text(
+                                  _selectedDate == null
+                                      ? 'Choose Date'
+                                      : 'Change Date',
+                                  style: TextStyle(color: theme.primaryColor))),
                     ],
                   ),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: RaisedButton(
-                      color: theme.primaryColor,
-                      textColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Text(
-                        'Add Transaction',
-                        // style: TextStyle(color: Colors.purple),
-                      ),
-                      onPressed: submitData,
-                    ),
+                    child: Platform.isIOS
+                        ? CupertinoButton(
+                            color: theme.primaryColor,
+                            borderRadius: BorderRadius.circular(15),
+                            child: Text(
+                              'Add Transaction',
+                              // style: TextStyle(color: Colors.purple),
+                            ),
+                            onPressed: submitData,
+                          )
+                        : RaisedButton(
+                            color: theme.primaryColor,
+                            textColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Text(
+                              'Add Transaction',
+                              // style: TextStyle(color: Colors.purple),
+                            ),
+                            onPressed: submitData,
+                          ),
                   )
                 ],
               ),
