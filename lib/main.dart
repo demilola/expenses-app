@@ -140,7 +140,11 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('Hide Chart'),
-                Switch.adaptive(value: _showChart, onChanged: _toggleSwitch),
+                Switch.adaptive(
+                  value: _showChart,
+                  onChanged: _toggleSwitch,
+                  activeColor: Theme.of(context).toggleableActiveColor,
+                ),
               ],
             ),
           if (!_isLandscape)
