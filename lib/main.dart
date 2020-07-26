@@ -16,8 +16,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter App',
       theme: ThemeData(
         primarySwatch: Colors.amber,
-        textTheme: GoogleFonts.openSansTextTheme(),
-        accentTextTheme: GoogleFonts.quicksandTextTheme(),
+        textTheme: GoogleFonts.openSansTextTheme().apply(fontSizeFactor: MediaQuery.of(context).textScaleFactor),
+        accentTextTheme: GoogleFonts.quicksandTextTheme().apply(fontSizeFactor: MediaQuery.of(context).textScaleFactor),
         floatingActionButtonTheme: FloatingActionButtonThemeData(),
         appBarTheme: AppBarTheme(
           centerTitle: true,
