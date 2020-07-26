@@ -40,13 +40,13 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return recentTransactions.isNotEmpty
+                  ? Card(
       elevation: 5,
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: 
-          recentTransactions.isNotEmpty
-                  ? 
+          
                   groupedTransactionsList
                       .map((recentTransaction) =>
                           Flexible(
@@ -61,8 +61,8 @@ class Chart extends StatelessWidget {
                             ),
                           ))
                       .toList()
-                  : []
+                  
                 ),
-    );
+    ): Container();
   }
 }
