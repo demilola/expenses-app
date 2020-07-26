@@ -16,8 +16,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter App',
       theme: ThemeData(
         primarySwatch: Colors.amber,
-        textTheme: GoogleFonts.openSansTextTheme().apply(fontSizeFactor: MediaQuery.of(context).textScaleFactor),
-        accentTextTheme: GoogleFonts.quicksandTextTheme().apply(fontSizeFactor: MediaQuery.of(context).textScaleFactor),
+        textTheme: GoogleFonts.openSansTextTheme()
+            .apply(fontSizeFactor: MediaQuery.textScaleFactorOf(context)),
+        accentTextTheme: GoogleFonts.quicksandTextTheme()
+            .apply(fontSizeFactor: MediaQuery.textScaleFactorOf(context)),
         floatingActionButtonTheme: FloatingActionButtonThemeData(),
         appBarTheme: AppBarTheme(
           centerTitle: true,
@@ -106,17 +108,20 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     var appBar = AppBar(
-            title: Text(widget.title),
-          );
-        return Scaffold(
-          resizeToAvoidBottomInset: true,
-          appBar: appBar,
+      title: Text(widget.title),
+    );
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: appBar,
       body: Column(
         children: <Widget>[
           Container(
               width: MediaQuery.of(context).size.width,
               //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
-              height: (MediaQuery.of(context).size.height-appBar.preferredSize.height-MediaQuery.of(context).padding.top)*.25,
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height -
+                      MediaQuery.of(context).padding.top) *
+                  .25,
               child: Chart(
                 recentTransactions: recentTransactions,
               )),
