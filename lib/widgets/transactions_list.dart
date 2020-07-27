@@ -14,7 +14,7 @@ class TransactionsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData _theme = Theme.of(context);
-        MediaQueryData _mediaQuery = MediaQuery.of(context);
+    MediaQueryData _mediaQuery = MediaQuery.of(context);
 
     return transactions.isEmpty
         ? LayoutBuilder(
@@ -48,15 +48,31 @@ class TransactionsList extends StatelessWidget {
                           ],
                         ),
                       ),
-                  // onLongPress: removeTransaction(index),
+                  onLongPress: () => showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            content: Text(
+                                'Are you sure you want to delete this Task?'),
+                            actions: [
+                              FlatButton(
+                                  child: Text('No'),
+                                  onPressed: () => Navigator.pop(context)),
+                              RaisedButton(
+                                  color: _theme.errorColor,
+                                  child: Text('Yes'),
+                                  onPressed: () {
+                                    deleteTransaction(transactions[index].id);
+                                    Navigator.pop(context);
+                                  })
+                            ],
+                          )),
                   child: Card(
                     elevation: 3,
                     child: ListTile(
                       leading: CircleAvatar(
                         radius: 30,
                         child: Padding(
-                          padding: EdgeInsets.all(
-                              _mediaQuery.size.width * .02),
+                          padding: EdgeInsets.all(_mediaQuery.size.width * .02),
                           child: SizedBox(
                             height: _mediaQuery.size.height * 0.03,
                             child: FittedBox(
@@ -75,8 +91,8 @@ class TransactionsList extends StatelessWidget {
                           ? FlatButton.icon(
                               onPressed: () =>
                                   deleteTransaction(transactions[index].id),
-                              icon: Icon(Icons.delete,
-                                  color: _theme.errorColor),
+                              icon:
+                                  Icon(Icons.delete, color: _theme.errorColor),
                               label: Text('Delete'),
                               textColor: _theme.errorColor,
                             )
@@ -85,8 +101,26 @@ class TransactionsList extends StatelessWidget {
                                 Icons.delete,
                                 color: _theme.errorColor,
                               ),
-                              onPressed: () =>
-                                  deleteTransaction(transactions[index].id)),
+                              onPressed: () => showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                        content: Text(
+                                            'Are you sure you want to delete this Task?'),
+                                        actions: [
+                                          FlatButton(
+                                              child: Text('No'),
+                                              onPressed: () =>
+                                                  Navigator.pop(context)),
+                                          RaisedButton(
+                                              color: _theme.errorColor,
+                                              child: Text('Yes'),
+                                              onPressed: () {
+                                                deleteTransaction(
+                                                    transactions[index].id);
+                                                Navigator.pop(context);
+                                              })
+                                        ],
+                                      ))),
                     ),
                   ));
             });
