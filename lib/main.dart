@@ -135,72 +135,88 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List<Widget> _buildLandscapeContent(
+          MediaQueryData _mediaQuery, PreferredSizeWidget appBar) =>
+      [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Hide Chart', style: Theme.of(context).textTheme.headline6),
+            Switch.adaptive(
+              value: _showChart,
+              onChanged: _toggleSwitch,
+              activeColor: Theme.of(context).toggleableActiveColor,
+            ),
+          ],
+        ),
+        _showChart
+            ? Container()
+            : Container(
+                width: _mediaQuery.size.width,
+                //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
+                height: recentTransactions.isNotEmpty
+                    ? (_mediaQuery.size.height -
+                            appBar.preferredSize.height -
+                            _mediaQuery.padding.top) *
+                        .30
+                    : 0.00,
+                child: Chart(
+                  recentTransactions: recentTransactions,
+                )),
+        Expanded(child: TransactionsList(_transactions, _deleteTransaction))
+      ];
+
+  List<Widget> _buildPortraitContent(
+          MediaQueryData _mediaQuery, PreferredSizeWidget appBar) =>
+      [
+        Container(
+            width: _mediaQuery.size.width,
+            //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
+            height: recentTransactions.isNotEmpty
+                ? (_mediaQuery.size.height -
+                        appBar.preferredSize.height -
+                        _mediaQuery.padding.top) *
+                    .30
+                : 0.00,
+            child: Chart(
+              recentTransactions: recentTransactions,
+            )),
+        Expanded(child: TransactionsList(_transactions, _deleteTransaction))
+      ];
+
+  PreferredSizeWidget _buildAppBar() => Platform.isIOS
+      ? CupertinoNavigationBar(
+          middle: Text(widget.title),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CupertinoButton(
+                  child: Icon(CupertinoIcons.add),
+                  onPressed: () => _openModalSheet(context)),
+              const Text('Add')
+            ],
+          ),
+        )
+      : AppBar(
+          title: Text(widget.title),
+        );
+
   @override
   Widget build(BuildContext context) {
     final MediaQueryData _mediaQuery = MediaQuery.of(context);
+
     final bool _isLandscape = _mediaQuery.orientation == Orientation.landscape;
-    PreferredSizeWidget appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: Text(widget.title),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CupertinoButton(
-                    child: Icon(CupertinoIcons.add),
-                    onPressed: () => _openModalSheet(context)),
-                const Text('Add')
-              ],
-            ),
-          )
-        : AppBar(
-            title: Text(widget.title),
-          );
+
+    final PreferredSizeWidget appBar = _buildAppBar();
+
     final Widget appBody = SafeArea(
         child: Column(
       children: <Widget>[
-        if (_isLandscape)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Hide Chart', style: Theme.of(context).textTheme.headline1),
-              Switch.adaptive(
-                value: _showChart,
-                onChanged: _toggleSwitch,
-                activeColor: Theme.of(context).toggleableActiveColor,
-              ),
-            ],
-          ),
-        if (!_isLandscape)
-          Container(
-              width: _mediaQuery.size.width,
-              //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
-              height: recentTransactions.isNotEmpty
-                  ? (_mediaQuery.size.height -
-                          appBar.preferredSize.height -
-                          _mediaQuery.padding.top) *
-                      .30
-                  : 0.00,
-              child: Chart(
-                recentTransactions: recentTransactions,
-              )),
-        if (_isLandscape)
-          _showChart
-              ? Container()
-              : Container(
-                  width: _mediaQuery.size.width,
-                  //Here, we are calculating the amount of view space left by subtracting the height of the app bar (which we made into a variable to access), and the padding at the top which is usually the status bar
-                  height: recentTransactions.isNotEmpty
-                      ? (_mediaQuery.size.height -
-                              appBar.preferredSize.height -
-                              _mediaQuery.padding.top) *
-                          .30
-                      : 0.00,
-                  child: Chart(
-                    recentTransactions: recentTransactions,
-                  )),
-        Expanded(child: TransactionsList(_transactions, _deleteTransaction))
+        if (_isLandscape) ..._buildLandscapeContent(_mediaQuery, appBar),
+        if (!_isLandscape) ..._buildPortraitContent(_mediaQuery, appBar),
       ],
     ));
+
     return Platform.isIOS
         ? CupertinoPageScaffold(
             child: appBar,
