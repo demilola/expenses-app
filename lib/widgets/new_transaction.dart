@@ -52,12 +52,12 @@ class _NewTransactionState extends State<NewTransaction> {
     MediaQueryData _mediaQuery = MediaQuery.of(context);
 
     return Container(
-      color: Color(0xff757575),
+      color: const Color(0xff757575),
       child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 4.0),
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20.0),
               topRight: Radius.circular(20.0),
             ),
@@ -138,7 +138,7 @@ class _NewTransactionState extends State<NewTransaction> {
                         ? CupertinoButton(
                             color: theme.primaryColor,
                             borderRadius: BorderRadius.circular(15),
-                            child: Text(
+                            child: const Text(
                               'Add Transaction',
                               // style: TextStyle(color: Colors.purple),
                             ),

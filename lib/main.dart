@@ -148,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 CupertinoButton(
                     child: Icon(CupertinoIcons.add),
                     onPressed: () => _openModalSheet(context)),
-                Text('Add')
+                const Text('Add')
               ],
             ),
           )
